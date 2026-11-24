@@ -2726,6 +2726,8 @@ test("Shop by Collection cards keep their image ratios and phone carousel peek",
       assert.ok(Math.abs(dimensions.cards[0].ratio - 4 / 3) < 0.03, `${width}px desktop card image should use 4:3 framing`);
       assert.ok(Math.abs(dimensions.cards[0].cardRect.width - dimensions.cards[1].cardRect.width) < 1, `${width}px desktop cards should be balanced in two columns`);
       assert.ok(Math.abs(dimensions.cards[0].cardRect.y - dimensions.cards[1].cardRect.y) < 1, `${width}px desktop cards should share a row`);
+      assert.ok(dimensions.cards[0].cardRect.width <= 390, `${width}px desktop collection cards should stay compact`);
+      assert.ok(Math.abs((dimensions.trackRect.x + dimensions.trackRect.width / 2) - width / 2) < 2, `${width}px desktop cards should stay centered`);
       assert.ok(dimensions.trackScrollWidth <= dimensions.trackClientWidth + 1, `${width}px desktop cards should remain in the two-column grid`);
     }
   }
