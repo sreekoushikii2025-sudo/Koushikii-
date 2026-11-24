@@ -1107,20 +1107,21 @@
 }
 
 .kq .home-collection-track {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-auto-flow: row;
-  gap: clamp(16px, 2.2vw, 28px);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  --home-collection-gap: clamp(16px, 2.2vw, 28px);
+  gap: var(--home-collection-gap);
   min-width: 0;
   width: 100%;
-  max-width: 780px;
-  margin-inline: auto;
   overflow: visible;
 }
 
 .kq .home-collection-track > a,
 .kq .home-collection-track > .home-collection-card {
   display: block;
+  flex: 0 1 calc((100% - var(--home-collection-gap)) / 2);
+  max-width: 360px;
   min-width: 0;
   padding: 0;
   border: 0;
@@ -1171,6 +1172,7 @@
 
 @media (max-width: 767px) {
   .kq .home-collection-track {
+    display: grid;
     grid-auto-flow: column;
     grid-template-columns: none;
     grid-auto-columns: min(84%, 340px);

@@ -2726,10 +2726,23 @@ test("Shop by Collection cards keep their image ratios and phone carousel peek",
       assert.ok(Math.abs(dimensions.cards[0].ratio - 4 / 3) < 0.03, `${width}px desktop card image should use 4:3 framing`);
       assert.ok(Math.abs(dimensions.cards[0].cardRect.width - dimensions.cards[1].cardRect.width) < 1, `${width}px desktop cards should be balanced in two columns`);
       assert.ok(Math.abs(dimensions.cards[0].cardRect.y - dimensions.cards[1].cardRect.y) < 1, `${width}px desktop cards should share a row`);
-      assert.ok(dimensions.cards[0].cardRect.width <= 390, `${width}px desktop collection cards should stay compact`);
-      assert.ok(Math.abs((dimensions.trackRect.x + dimensions.trackRect.width / 2) - width / 2) < 2, `${width}px desktop cards should stay centered`);
-      assert.ok(dimensions.trackScrollWidth <= dimensions.trackClientWidth + 1, `${width}px desktop cards should remain in the two-column grid`);
+      assert.ok(dimensions.cards[0].cardRect.width <= 360, `${width}px desktop collection cards should stay compact`);
+      assert.ok(Math.abs(dimensions.cards[0].cardRect.x - dimensions.trackRect.x) < 2, `${width}px desktop cards should stay aligned to the collection section`);
+      assert.ok(dimensions.trackScrollWidth <= dimensions.trackClientWidth + 1, `${width}px desktop cards should wrap instead of overflowing`);
     }
   }
+
+  await page.setViewportSize({ width: 1024, height: 900 });
+  const extraCollectionLayout = await track.evaluate(element => {
+    const extraCard = element.querySelector(":scope > a").cloneNode(true);
+    extraCard.dataset.testCollectionCard = "additional";
+    element.append(extraCard);
+    const trackRect = element.getBoundingClientRect();
+    const cards = [...element.querySelectorAll(":scope > a")].map(card => card.getBoundingClientRect());
+    extraCard.remove();
+    return { trackRect: trackRect.toJSON(), cards: cards.map(rect => rect.toJSON()) };
+  });
+  assert.ok(extraCollectionLayout.cards[2].y > extraCollectionLayout.cards[0].y, "additional collections should flow onto a new row when the current row is full");
+  assert.ok(Math.abs(extraCollectionLayout.cards[2].x - extraCollectionLayout.trackRect.x) < 2, "new collection rows should remain left-aligned");
   await context.close();
 });
