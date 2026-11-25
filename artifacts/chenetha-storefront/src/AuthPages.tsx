@@ -1,4 +1,5 @@
 import { SignIn, SignUp } from "@clerk/react";
+import "./AuthPages.css";
 
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 
